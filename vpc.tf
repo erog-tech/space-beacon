@@ -50,13 +50,26 @@ resource "aws_main_route_table_association" "space_beacon" {
   route_table_id = aws_route_table.space_beacon.id
 }
 
-resource "aws_subnet" "space_beacon" {
-  vpc_id     = aws_vpc.space_beacon.id
-  cidr_block = "10.0.1.0/24"
+resource "aws_subnet" "space_beacon_1" {
+  vpc_id            = aws_vpc.space_beacon.id
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "eu-central-1a"
 
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "space_beacon"
+    Name = "space_beacon_1"
+  }
+}
+
+resource "aws_subnet" "space_beacon_2" {
+  vpc_id            = aws_vpc.space_beacon.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "eu-central-1b"
+
+  map_public_ip_on_launch = true
+
+  tags = {
+    Name = "space_beacon_2"
   }
 }

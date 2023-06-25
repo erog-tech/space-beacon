@@ -5,7 +5,7 @@ module "eks" {
   cluster_version = "1.27"
 
   vpc_id     = aws_vpc.space_beacon.id
-  subnet_ids = [aws_subnet.space_beacon.id]
+  subnet_ids = [aws_subnet.space_beacon_1.id, aws_subnet.space_beacon_2.id]
 
   # Self Managed Node Group(s)
   self_managed_node_group_defaults = {
