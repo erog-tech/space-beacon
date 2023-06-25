@@ -47,15 +47,11 @@ module "eks" {
   # aws-auth configmap
   manage_aws_auth_configmap = true
 
-  map_users = var.map_users
-}
-
-variable "map_users" {
-  description = "Additional IAM users to add to the aws-auth configmap"
-  type = list(object({
-    userarn  = string
-    username = string
-    groups   = list(string)
-  }))
-  default = []
+    aws_auth_users = [
+    {
+      userarn  = "arn:aws:iam::603956422639:user/pri.chauhan"
+      username = "pri.chauhan"
+      groups   = ["system:masters"]
+    }
+  ]
 }
