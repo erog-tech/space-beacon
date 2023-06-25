@@ -22,17 +22,17 @@ module "eks" {
       }
     }
   }
-  
-  manage_aws_auth = true
-  write_kubeconfig = true
+
+  manage_aws_auth    = true
+  write_kubeconfig   = true
   config_output_path = "./"
 
-  map_users    = var.map_users
+  map_users = var.map_users
 }
 
 variable "map_users" {
   description = "Additional IAM users to add to the aws-auth configmap"
-  type        = list(object({
+  type = list(object({
     userarn  = string
     username = string
     groups   = list(string)
