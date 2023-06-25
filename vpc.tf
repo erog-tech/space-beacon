@@ -45,7 +45,7 @@ resource "aws_route_table" "space_beacon" {
   }
 }
 
-resource "aws_space_beacon_route_table_association" "space_beacon" {
+resource "aws_main_route_table_association" "space_beacon" {
   vpc_id         = aws_vpc.space_beacon.id
   route_table_id = aws_route_table.space_beacon.id
 }
