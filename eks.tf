@@ -47,7 +47,7 @@ module "eks" {
   # aws-auth configmap
   manage_aws_auth_configmap = true
 
-    aws_auth_users = [
+  aws_auth_users = [
     {
       userarn  = "arn:aws:iam::603956422639:user/pri.chauhan"
       username = "pri.chauhan"
