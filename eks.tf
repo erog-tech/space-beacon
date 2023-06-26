@@ -20,17 +20,17 @@ provider "helm" {
   }
 }
 module "eks" {
-  source          = "terraform-aws-modules/eks/aws"
-  version         = "19.0"
-  cluster_name    = "space-beacon"
-  cluster_version = "1.27"
-  cluster_endpoint_public_access  = true
-  
+  source                         = "terraform-aws-modules/eks/aws"
+  version                        = "19.0"
+  cluster_name                   = "space-beacon"
+  cluster_version                = "1.27"
+  cluster_endpoint_public_access = true
+
   vpc_id                 = aws_vpc.space_beacon.id
   subnet_ids             = [aws_subnet.space_beacon_1.id, aws_subnet.space_beacon_2.id]
   node_security_group_id = aws_security_group.space_beacon.id
 
-     # EKS Managed Node Group(s)
+  # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
     instance_types = ["m6i.large", "m5.large", "m5n.large", "m5zn.large"]
   }
