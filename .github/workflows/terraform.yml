@@ -68,4 +68,4 @@ jobs:
         helm repo add stable https://charts.helm.sh/stable
     - name: Deploy Helm chart
       run: |
-        helm upgrade --install space-beacon ./sbchart --set image.tag=${{ github.sha }}
+        helm upgrade --install space-beacon ./sbchart --set image.tag=${{ github.sha }} --namespace space-beacon --create-namespace
