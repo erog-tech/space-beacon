@@ -67,4 +67,4 @@ jobs:
         export KUBECONFIG=kubeconfig
 
     - name: Install Helm chart
-      run: helm upgrade --install space-beacon ../../sbchart
+      run: helm upgrade --install space-beacon ../../sbchart --namespace space-beacon --create-namespace
