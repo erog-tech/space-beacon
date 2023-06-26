@@ -72,7 +72,8 @@ jobs:
       if: github.ref != 'refs/heads/master' || github.event_name != 'push'
       run: |
         helm upgrade --install space-beacon ./sbchart --set image.tag=${{ github.sha }} --namespace space-beacon --create-namespace --dry-run
-        
-    - name: Deploy Helm chart prod 
+
+    - name: Deploy Helm chart prod
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push' 
       run: |
         helm upgrade --install space-beacon ./sbchart --set image.tag=${{ github.sha }} --namespace space-beacon --create-namespace
