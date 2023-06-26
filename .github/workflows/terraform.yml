@@ -56,16 +56,22 @@ jobs:
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
     
-    - name: set aws config 
+    - name: set aws config
       run: |
         aws eks update-kubeconfig --region eu-central-1 --name space-beacon
 
     - name: Install Helm
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
     - name: Add Helm repo
       run: |
         helm repo add stable https://charts.helm.sh/stable
+
     - name: Deploy Helm chart
+      if: github.ref != 'refs/heads/master' || github.event_name != 'push'
+      run: |
+        helm upgrade --install space-beacon ./sbchart --set image.tag=${{ github.sha }} --namespace space-beacon --create-namespace --dry-run
+      else
       run: |
         helm upgrade --install space-beacon ./sbchart --set image.tag=${{ github.sha }} --namespace space-beacon --create-namespace
