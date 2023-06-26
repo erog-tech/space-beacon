@@ -1,0 +1,8 @@
+replicaCount: 1
+image:
+  repository: 603956422639.dkr.ecr.eu-central-1.amazonaws.com/nodejs-app
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 80
