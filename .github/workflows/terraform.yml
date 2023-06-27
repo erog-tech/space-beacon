@@ -6,8 +6,8 @@ on:
   pull_request:
 
 env:
-  ECR_REGISTRY: nodejs-app
-  IMAGE_NAME: 603956422639.dkr.ecr.eu-central-1.amazonaws.com/nodejs-app
+  ECR_REGISTRY: 603956422639.dkr.ecr.eu-central-1.amazonaws.com
+  IMAGE_NAME: nodejs-app
   AWS_REGION: eu-central-1
   EKS_CLUSTER_NAME: space-beacon
 
