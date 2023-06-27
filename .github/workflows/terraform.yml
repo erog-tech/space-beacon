@@ -92,7 +92,7 @@ jobs:
       id: update-image
       run: |
         aws ecr batch-get-image --repository-name $IMAGE_NAME --image-ids imageTag=$GITHUB_SHA --query 'images[].imageManifest' --output text > image-manifest.json
-        aws ecr put-image --repository-name $IMAGE_NAME --image-tag $GITHUB_SHA --manifest file://image-manifest.json
+        aws ecr put-image --repository-name $IMAGE_NAME --image-tag $GITHUB_SHA --image-manifest file://image-manifest.json
 
     - name: Install Helm
       run: |
