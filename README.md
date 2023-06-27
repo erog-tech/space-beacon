@@ -148,7 +148,7 @@ To enhance the reliability and maintainability of the setup, here are some futur
 
 ### Use S3 Bucket for Terraform State
 
-Currently, the Terraform state is managed by terraform cloud remote backend,to be more consistent with whole setup try to store the Terraform state in a S3 bucket.
+Currently, the Terraform state is managed by terraform cloud remote backend, to be more consistent with whole setup try to store the Terraform state in a S3 bucket.
 
 1. Create an S3 bucket specifically for storing the Terraform state. Make sure that the bucket is properly secured and versioning is enabled.
 
