@@ -142,6 +142,26 @@ To resolve this issue, follow these steps:
 
 These steps should resolve the issue and allow the EKS cluster to be created successfully. If you continue to experience problems, please review the error messages and check the [Terraform documentation](https://www.terraform.io/docs/) for further troubleshooting steps.
 
+## Future Recommendations
+
+To enhance the reliability and maintainability of the setup, here are some future improvements to consider:
+
+### Use S3 Bucket for Terraform State
+
+Currently, the Terraform state is managed by terraform cloud remote backend,to be more consistent with whole setup try to store the Terraform state in a S3 bucket.
+
+1. Create an S3 bucket specifically for storing the Terraform state. Make sure that the bucket is properly secured and versioning is enabled.
+
+2. Update the Terraform configuration to use the S3 backend. The bucket name should be specified in the `backend "s3"` block in the `main.tf` file.
+
+3. When running `terraform init`, pass in the bucket name to the `-backend-config` argument. This tells Terraform to use the specified bucket for its state.
+
+By implementing these steps, the Terraform state will be stored in a centralized location accessible to all team members, reducing the risk of inconsistencies.
+
+### Solve EKS Cluster Creation Issue
+
+As mentioned in the [Troubleshooting](#common-issues-and-troubleshooting) section, there's an issue with creating the EKS cluster for the first time. To eliminate this problem, consider updating the Terraform code to handle this scenario more gracefully.
+
 ## Contributing
 
 Contributions are welcome! Please read the [contributing guide](CONTRIBUTING.md) to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes.
