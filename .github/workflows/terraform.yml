@@ -5,6 +5,11 @@ on:
     branches: [ "master" ]
   pull_request:
 
+env:
+  ECR_REGISTRY: 603956422639.dkr.ecr.eu-central-1.amazonaws.com/nodejs-app
+  IMAGE_NAME: nodejs-app
+  AWS_REGION: eu-central-1
+
 permissions:
   contents: read
 
@@ -59,6 +64,25 @@ jobs:
     - name: set aws config
       run: |
         aws eks update-kubeconfig --region eu-central-1 --name space-beacon
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build and tag Docker image
+      id: build-image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+    - name: Update Amazon ECR image
+      if: github.ref != 'refs/heads/master' || github.event_name != 'push'
+      id: update-image
+      run: |
+        aws ecr batch-get-image --repository-name $ECR_REGISTRY/$IMAGE_NAME --image-ids imageTag=$GITHUB_SHA --query 'images[].imageManifest' --output text > image-manifest.json
+        aws ecr put-image --repository-name $ECR_REGISTRY/$IMAGE_NAME --image-tag $GITHUB_SHA --manifest file://image-manifest.json
 
     - name: Install Helm
       run: |
