@@ -79,6 +79,9 @@ jobs:
         context: .
         push: true
         tags: ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      env:
+        DOCKER_BUILDKIT: 0
+
 
     - name: Update Amazon ECR image
       if: github.ref != 'refs/heads/master' || github.event_name != 'push'
