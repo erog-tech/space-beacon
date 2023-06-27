@@ -122,6 +122,25 @@ Once you have an account, follow these steps to configure AWS credentials:
     ```bash
     helm install your-chart-name .
     ```
+## Common Issues and Troubleshooting
+
+### EKS Cluster Creation Issue
+
+When setting up the environment for the first time, you may encounter an issue where the EKS cluster fails to create. This issue may result in error messages and prevent the completion of the setup process.
+
+To resolve this issue, follow these steps:
+
+1. Open the `eks.tf` file in your text editor.
+
+2. Comment out lines 1 to 22. This can typically be done by adding a `#` at the beginning of each line.
+
+3. Run `terraform plan` and `terraform apply` in your terminal. At this point, you may see an error message that `aws-auth` does not exist. This is expected.
+
+4. Go back to the `eks.tf` file and uncomment lines 1 to 22 (remove the `#` at the beginning of each line).
+
+5. Run `terraform plan` and `terraform apply` again.
+
+These steps should resolve the issue and allow the EKS cluster to be created successfully. If you continue to experience problems, please review the error messages and check the [Terraform documentation](https://www.terraform.io/docs/) for further troubleshooting steps.
 
 ## Contributing
 
