@@ -63,9 +63,10 @@ jobs:
       run: terraform apply -auto-approve -input=false
     
     - name: Set AWS Config
-      if: 'contains(run("aws eks describe-cluster --name space-beacon --region eu-central-1 2>&1"), "ResourceNotFoundException") == false'
       run: |
+        if [[ $(aws eks describe-cluster --name space-beacon --region eu-central-1 2>&1) != *"ResourceNotFoundException"* ]]; then
         aws eks update-kubeconfig --region eu-central-1 --name space-beacon
+        fi
 
     - name: Login to Amazon ECR
       id: login-ecr
