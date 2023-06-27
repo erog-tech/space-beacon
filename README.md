@@ -51,6 +51,23 @@ The workflow is defined in the `.github/workflows/terraform.yaml` file.
 
    The workflow is triggered whenever you push changes to your repository. You can also manually trigger the workflow from the 'Actions' tab in your GitHub repository.
 
+## Setup Terraform Cloud
+
+Before you can use Terraform Cloud, you need to sign up for an account at [https://app.terraform.io/signup/account](https://app.terraform.io/signup/account).
+
+Once you have an account, follow these steps to configure AWS credentials:
+
+1. Navigate to your organization's settings page by clicking the "Settings" link at the top of the Terraform Cloud UI.
+
+2. On the left side of the settings page, click on "Variables".
+
+3. In the "Environment Variables" section, click on "Add Variable".
+
+4. Add the following two environment variables:
+   
+   - `AWS_ACCESS_KEY_ID`: This should be set to your AWS access key.
+   - `AWS_SECRET_ACCESS_KEY`: This should be set to your AWS secret access key.
+
 ## Build and Deployment Steps
 
 1. **Build Docker Image**
