@@ -10,7 +10,6 @@ env:
   IMAGE_NAME: nodejs-app
   AWS_REGION: eu-central-1
   EKS_CLUSTER_NAME: space-beacon
-  BUCKET_NAME: space-beacon-$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 
 permissions:
   contents: read
@@ -45,19 +44,9 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-central-1
 
-    # Create S3 bucket for Terraform state
-    - name: Create S3 bucket 
-      run: |
-        if ! aws s3api head-bucket --bucket space-beacon-$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1) 2>&1 | grep -q 'Not Found'; then
-          echo "Bucket already exists"
-        else
-          aws s3api create-bucket --bucket space-beacon-$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1) --region $AWS_REGION --create-bucket-configuration LocationConstraint=$AWS_REGION
-          aws s3api put-bucket-versioning --bucket space-beacon-$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1) --versioning-configuration Status=Enabled
-        fi
-
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
-      run: terraform init -backend-config="bucket=space-beacon-$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)" -backend-config="key=prod/terraform.tfstate" -backend-config="region=$AWS_REGION"
+      run: terraform init
 
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
@@ -65,13 +54,12 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan -input=false -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+      run: terraform plan -input=false
 
       # On push to "master", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
     - name: Terraform Apply
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-      run: terraform apply -auto-approve -input=false -var="aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }}" -var="aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+      run: terraform apply -auto-approve -input=false 
     
     - name: Set AWS Config
       run: |
