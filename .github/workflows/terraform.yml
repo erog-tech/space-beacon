@@ -72,6 +72,12 @@ jobs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
+    
+    - name: Create ECR repository if it doesn't exist
+      run: |
+        if ! aws ecr describe-repositories --repository-names $IMAGE_NAME --region $AWS_REGION; then
+        aws ecr create-repository --repository-name $IMAGE_NAME
+        fi
 
     - name: Build and tag Docker image
       id: build-image
@@ -81,19 +87,6 @@ jobs:
         push: true
         tags: ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
     
-    - name: Create ECR repository if it doesn't exist
-      run: |
-        if ! aws ecr describe-repositories --repository-names $IMAGE_NAME --region $AWS_REGION; then
-        aws ecr create-repository --repository-name $IMAGE_NAME
-        fi
-
-    - name: Update Amazon ECR image
-      
-      id: update-image
-      run: |
-        aws ecr batch-get-image --repository-name $IMAGE_NAME --image-ids imageTag=$GITHUB_SHA --query 'images[].imageManifest' --output text > image-manifest.json
-        aws ecr put-image --repository-name $IMAGE_NAME --image-tag $GITHUB_SHA --image-manifest file://image-manifest.json
-
     - name: Install Helm
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
