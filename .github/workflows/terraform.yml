@@ -100,7 +100,9 @@ jobs:
     - name: Deploy Helm chart dev
       if: github.ref != 'refs/heads/master' || github.event_name != 'push'
       run: |
+        if [[ $(aws eks describe-cluster --name space-beacon --region eu-central-1 2>&1) != *"ResourceNotFoundException"* ]]; then
         helm upgrade --install space-beacon ./sbchart --set image.tag=${{ github.sha }} --namespace space-beacon --create-namespace --dry-run
+        fi
 
     - name: Deploy Helm chart prod
       if: github.ref == 'refs/heads/master' && github.event_name == 'push' 
