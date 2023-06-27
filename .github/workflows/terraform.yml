@@ -67,7 +67,7 @@ jobs:
         aws eks describe-cluster --name space-beacon --region eu-central-1 > /dev/null 2>&1 || exit 0
 
     - name: Set AWS Config
-      if: ${{ success() && env.EKS_CLUSTER_NAME }}
+      if: ${{ success() && env.EKS_CLUSTER_NAME && $(aws eks describe-cluster --name space-beacon --query 'cluster.status' --output text) == 'ACTIVE' }}
       run: |
         aws eks update-kubeconfig --region eu-central-1 --name space-beacon
 
