@@ -10,18 +10,14 @@ This repository includes the necessary scripts and configurations to deploy a No
 - Helm installed
 - Kubernetes CLI (kubectl) installed
 - GitHub account
+- AWS account with permissions to manage ECR and EKS
+- Docker Hub account (optional)
 
 ## Setting up GitHub Actions Workflow
 
 This repository includes a GitHub Actions workflow that automates the building of the Docker image, pushing it to ECR, and deploying the application to the EKS cluster.
 
 The workflow is defined in the `.github/workflows/terraform.yaml` file.
-
-### Prerequisites
-
-- GitHub repository
-- AWS account with permissions to manage ECR and EKS
-- Docker Hub account (optional)
 
 ### Getting Started
 
@@ -55,7 +51,7 @@ The workflow is defined in the `.github/workflows/terraform.yaml` file.
 
    The workflow is triggered whenever you push changes to your repository. You can also manually trigger the workflow from the 'Actions' tab in your GitHub repository.
 
-## Getting Started
+## Build and Deployment Steps
 
 1. **Build Docker Image**
 
