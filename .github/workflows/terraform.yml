@@ -54,6 +54,7 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
+      if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       run: terraform plan -input=false
 
       # On push to "master", build or change infrastructure according to Terraform configuration files
@@ -90,8 +91,8 @@ jobs:
       
       id: update-image
       run: |
-        aws ecr batch-get-image --repository-name $IMAGE_NAME --image-ids imageTag=$GITHUB_SHA --query 'images[].imageManifest' --output text --region $AWS_REGION > image-manifest.json
-        aws ecr put-image --repository-name $IMAGE_NAME --image-tag $GITHUB_SHA --manifest file://image-manifest.json --region $AWS_REGION
+        aws ecr batch-get-image --repository-name $IMAGE_NAME --image-ids imageTag=$GITHUB_SHA --query 'images[].imageManifest' --output text > image-manifest.json
+        aws ecr put-image --repository-name $IMAGE_NAME --image-tag $GITHUB_SHA --manifest file://image-manifest.json
 
     - name: Install Helm
       run: |
