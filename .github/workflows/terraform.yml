@@ -61,10 +61,15 @@ jobs:
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
     
-    - name: set aws config
+    - name: Check if EKS cluster exists
+      run: |
+      eksctl get cluster --name space-beacon --region eu-central-1 || exit 0
+
+    - name: Set AWS Config
+      if: ${{ success() }}
       run: |
         aws eks update-kubeconfig --region eu-central-1 --name space-beacon
-    
+
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
