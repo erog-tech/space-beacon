@@ -10,6 +10,7 @@ env:
   IMAGE_NAME: nodejs-app
   AWS_REGION: eu-central-1
   EKS_CLUSTER_NAME: space-beacon
+  BUCKET_NAME: space-beacon-$(date +%Y%m%d%H%M%S)
 
 permissions:
   contents: read
@@ -47,16 +48,16 @@ jobs:
     # Create S3 bucket for Terraform state
     - name: Create S3 bucket 
       run: |
-        if ! aws s3api head-bucket --bucket space-beacon-erog 2>&1 | grep -q 'Not Found'; then
+        if ! aws s3api head-bucket --bucket $BUCKET_NAME 2>&1 | grep -q 'Not Found'; then
           echo "Bucket already exists"
         else
-          aws s3api create-bucket --bucket space-beacon-erog --region $AWS_REGION --create-bucket-configuration LocationConstraint=$AWS_REGION
-          aws s3api put-bucket-versioning --bucket space-beacon-erog --versioning-configuration Status=Enabled
+          aws s3api create-bucket --bucket $BUCKET_NAME --region $AWS_REGION --create-bucket-configuration LocationConstraint=$AWS_REGION
+          aws s3api put-bucket-versioning --bucket $BUCKET_NAME --versioning-configuration Status=Enabled
         fi
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
-      run: terraform init -backend-config="bucket=space-beacon-erog" -backend-config="key=prod/terraform.tfstate" -backend-config="region=$AWS_REGION"
+      run: terraform init -backend-config="bucket=$BUCKET_NAME" -backend-config="key=prod/terraform.tfstate" -backend-config="region=$AWS_REGION"
 
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
