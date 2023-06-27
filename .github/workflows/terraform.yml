@@ -79,13 +79,19 @@ jobs:
         context: .
         push: true
         tags: ${{ env.ECR_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+    
+    - name: Create ECR repository if it doesn't exist
+      run: |
+        if ! aws ecr describe-repositories --repository-names $ECR_REGISTRY/$IMAGE_NAME --region $AWS_REGION; then
+        aws ecr create-repository --repository-name $ECR_REGISTRY/$IMAGE_NAME
+        fi
 
     - name: Update Amazon ECR image
       
       id: update-image
       run: |
-        aws ecr batch-get-image --repository-name $ECR_REGISTRY/$IMAGE_NAME --image-ids imageTag=$GITHUB_SHA --query 'images[].imageManifest' --output text > image-manifest.json
-        aws ecr put-image --repository-name $ECR_REGISTRY/$IMAGE_NAME --image-tag $GITHUB_SHA --manifest file://image-manifest.json
+        aws ecr batch-get-image --repository-name $ECR_REGISTRY/$IMAGE_NAME --region $AWS_REGION --image-ids imageTag=$GITHUB_SHA --query 'images[].imageManifest' --output text > image-manifest.json
+        aws ecr put-image --repository-name $ECR_REGISTRY/$IMAGE_NAME --region $AWS_REGION --image-tag $GITHUB_SHA --manifest file://image-manifest.json
 
     - name: Install Helm
       run: |
