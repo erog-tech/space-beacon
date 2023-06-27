@@ -10,7 +10,7 @@ env:
   IMAGE_NAME: nodejs-app
   AWS_REGION: eu-central-1
   EKS_CLUSTER_NAME: space-beacon
-  BUCKET_NAME: space-beacon-$(date +%Y%m%d%H%M%S)
+  BUCKET_NAME: space-beacon-$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 8 | head -n 1)
 
 permissions:
   contents: read
